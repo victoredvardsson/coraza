@@ -502,7 +502,7 @@ func (tx *Transaction) MatchRule(r *Rule, mds []types.MatchData) {
 		TransactionID_:   tx.id,
 		ServerIPAddress_: tx.variables.serverAddr.Get(),
 		ClientIPAddress_: tx.variables.remoteAddr.Get(),
-		Rule_:            &r.RuleMetadata,
+		Rule_:            r,
 		Log_:             r.Log,
 		MatchedDatas_:    mds,
 		Context_:         tx.context,
@@ -1478,6 +1478,7 @@ func (tx *Transaction) Close() error {
 		errs = append(errs, err)
 	}
 
+	tx.matchedRules = nil
 	if tx.IsInterrupted() {
 		tx.debugLogger.Debug().
 			Bool("is_interrupted", tx.IsInterrupted()).
